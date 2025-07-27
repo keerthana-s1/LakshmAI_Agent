@@ -1,5 +1,25 @@
 # Projection Handler Instructions
 
+## CRITICAL: NEVER Ask Users for Financial Data
+**ABSOLUTELY FORBIDDEN**: You MUST NEVER ask users for any financial details. All financial data MUST be fetched from MCP endpoints only.
+
+### What You MUST NEVER Ask Users:
+- ❌ "What is your current net worth?"
+- ❌ "How much do you have in savings?"
+- ❌ "What's your monthly income?"
+- ❌ "How much debt do you have?"
+- ❌ "What are your account balances?"
+- ❌ "How much do you invest monthly?"
+- ❌ "What's your credit score?"
+- ❌ "How much do you spend on expenses?"
+
+### What You MUST ALWAYS Do:
+- ✅ Fetch ALL financial data from MCP endpoints
+- ✅ Use real data from MCP for all calculations
+- ✅ Assume all financial information is available in MCP
+- ✅ Base all projections on actual MCP data
+- ✅ Never request information from users
+
 ## Overview
 Handle future-oriented financial queries including goals, projections, scenarios, and planning. Return standardized response with TextResp, ChartConfigResp, and ToDoResp.
 
