@@ -1,0 +1,463 @@
+# Home Dashboard Handler Instructions
+
+## Overview
+When a user requests the home dashboard, the agent must call all 6 FI MCP endpoints and consolidate the responses into a standardized JSON format for the home dashboard.
+
+## Request Format
+The user will send requests in this format:
+```json
+{
+  "RequestType": "HomeDashboard",
+  "Request": {
+    "PhoneNumber": "9876543210",
+    "sessionID": "mcp-session-abc123",
+    "userId": "3333333333"
+  }
+}
+```
+
+## Response Format
+The agent must return the consolidated data in this exact JSON structure:
+
+```json
+{
+  "dashboardConfig": {
+    "theme": "dark",
+    "currency": "INR",
+    "dateFormat": "YYYY-MM-DD",
+    "refreshInterval": 300000,
+    "maxDataPoints": 100,
+    "dataSource": "FI-MCP API",
+    "lastUpdated": "2024-06-15T10:30:00Z"
+  },
+  "dashboardWidgets": [
+    {
+      "id": "bankAccounts",
+      "title": "Bank Accounts",
+      "type": "card",
+      "chartType": "line",
+      "chartData": {
+        "labels": ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01"],
+        "datasets": [
+          {
+            "label": "Balance",
+            "data": [180000, 185000, 190000, 195297],
+            "backgroundColor": "#6A5ACD",
+            "borderColor": "#6A5ACD"
+          }
+        ]
+      },
+      "currentValue": 195297,
+      "currency": "₹",
+      "changePercentage": 6.29,
+      "changeType": "positive"
+    },
+    {
+      "id": "mutualFunds",
+      "title": "Mutual Funds",
+      "type": "card",
+      "chartType": "line",
+      "chartData": {
+        "labels": ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01"],
+        "datasets": [
+          {
+            "label": "Value",
+            "data": [150000, 160000, 170000, 177605],
+            "backgroundColor": "#87CEEB",
+            "borderColor": "#87CEEB"
+          }
+        ]
+      },
+      "currentValue": 177605,
+      "currency": "₹",
+      "changePercentage": 12.29,
+      "changeType": "positive"
+    },
+    {
+      "id": "stocks",
+      "title": "Stocks",
+      "type": "card",
+      "chartType": "line",
+      "chartData": {
+        "labels": ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01"],
+        "datasets": [
+          {
+            "label": "Value",
+            "data": [210000, 205000, 202000, 200642],
+            "backgroundColor": "#FFD700",
+            "borderColor": "#FFD700"
+          }
+        ]
+      },
+      "currentValue": 200642,
+      "currency": "₹",
+      "changePercentage": -2.00,
+      "changeType": "negative"
+    },
+    {
+      "id": "usStocks",
+      "title": "US Stocks",
+      "type": "card",
+      "chartType": "line",
+      "chartData": {
+        "labels": ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01"],
+        "datasets": [
+          {
+            "label": "Value",
+            "data": [25000, 27000, 29000, 30071],
+            "backgroundColor": "#32CD32",
+            "borderColor": "#32CD32"
+          }
+        ]
+      },
+      "currentValue": 30071,
+      "currency": "₹",
+      "changePercentage": 10.29,
+      "changeType": "positive"
+    },
+    {
+      "id": "expenseBreakdown",
+      "title": "Expense Breakdown",
+      "type": "chart",
+      "dashboard": "homeDashboard",
+      "chartType": "doughnut",
+      "chartData": {
+        "labels": ["Food & Dining", "Transportation", "Shopping"],
+        "datasets": [
+          {
+            "label": "Expenses",
+            "data": [3500, 2500, 1500],
+            "backgroundColor": ["#6A5ACD", "#87CEEB", "#FFD700"]
+          }
+        ]
+      },
+      "total": 7500,
+      "period": "April 2024"
+    },
+    {
+      "id": "creditCardOutstanding",
+      "title": "Credit Card Outstanding",
+      "type": "chart",
+      "dashboard": "homeDashboard",
+      "chartType": "line",
+      "chartData": {
+        "labels": ["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01"],
+        "datasets": [
+          {
+            "label": "Outstanding",
+            "data": [8000, 7000, 6000, 5000],
+            "backgroundColor": "#FF6347",
+            "borderColor": "#FF6347"
+          }
+        ]
+      },
+      "currentOutstanding": 5000,
+      "cardNumber": "XXXXXX2724",
+      "expiryDate": "09/25"
+    },
+    {
+      "id": "creditScoreHistory",
+      "title": "Credit Score History",
+      "type": "chart",
+      "dashboard": "homeDashboard",
+      "chartType": "line",
+      "chartData": {
+        "labels": ["2019-10-01", "2020-01-01", "2020-04-01"],
+        "datasets": [
+          {
+            "label": "Credit Score",
+            "data": [720, 735, 746],
+            "backgroundColor": "#4682B4",
+            "borderColor": "#4682B4"
+          }
+        ]
+      },
+      "currentScore": 746
+    },
+    {
+      "id": "netWorthOverview",
+      "title": "Net Worth Overview",
+      "type": "chart",
+      "dashboard": "homeDashboard",
+      "chartType": "bar",
+      "chartData": {
+        "labels": ["Assets", "Liabilities"],
+        "datasets": [
+          {
+            "label": "Value",
+            "data": [750726, 64000],
+            "backgroundColor": ["#32CD32", "#FF6347"]
+          }
+        ]
+      },
+      "netWorth": 686726
+    },
+    {
+      "id": "assetBreakdown",
+      "title": "Asset Breakdown",
+      "type": "chart",
+      "dashboard": "homeDashboard",
+      "chartType": "pie",
+      "chartData": {
+        "labels": ["Savings Accounts", "Mutual Funds", "Indian Securities", "EPF", "US Securities"],
+        "datasets": [
+          {
+            "label": "Assets",
+            "data": [195297, 177605, 200642, 211111, 30071],
+            "backgroundColor": ["#6A5ACD", "#87CEEB", "#FFD700", "#32CD32", "#FF6347"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mutualFundsHistory",
+      "title": "Mutual Funds History",
+      "type": "chart",
+      "dashboard": "homeDashboard",
+      "chartType": "line",
+      "chartData": {
+        "labels": ["Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        "datasets": [
+          {
+            "label": "Fund 1",
+            "data": [3000, 3400, 3700, 4000, 6000, 6450, 5000, 5300, 5600, 5900],
+            "backgroundColor": "#ff4d6d",
+            "borderColor": "#ff4d6d"
+          },
+          {
+            "label": "Fund 2",
+            "data": [3200, 3300, 3600, 3900, 4200, 6500, 5200, 5400, 5700, 6000],
+            "backgroundColor": "#6c63ff",
+            "borderColor": "#6c63ff"
+          },
+          {
+            "label": "Fund 3",
+            "data": [3100, 3500, 3800, 4100, 4300, 6400, 5100, 5500, 5800, 6100],
+            "backgroundColor": "#3ecf8e",
+            "borderColor": "#3ecf8e"
+          }
+        ]
+      }
+    },
+    {
+      "id": "usStocksBar",
+      "title": "US Stocks Bar Chart",
+      "type": "chart",
+      "dashboard": "homeDashboard",
+      "chartType": "bar",
+      "chartData": {
+        "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        "datasets": [
+          {
+            "label": "MSFT",
+            "data": [30000, 32000, 35000, 28000, 37000, 39000, 42000, 41000, 38000, 40000, 43000, 45000],
+            "backgroundColor": "#6c63ff"
+          },
+          {
+            "label": "APPL",
+            "data": [25000, 27000, 29000, 26000, 31000, 33000, 36456.9, 35000, 34000, 36000, 39000, 41000],
+            "backgroundColor": "#3ecf8e"
+          }
+        ]
+      }
+    }
+  ],
+  "userProfile": {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "phone": "+91-9876543210",
+    "riskProfile": "Moderate",
+    "investmentGoals": ["Retirement", "Emergency Fund", "Vacation"],
+    "preferences": {
+      "currency": "INR",
+      "language": "en",
+      "notifications": true,
+      "theme": "dark"
+    },
+    "accounts": {
+      "bankAccounts": 3,
+      "creditCards": 2,
+      "investmentAccounts": 4,
+      "loanAccounts": 3
+    }
+  },
+  "notifications": [
+    {
+      "id": "1",
+      "type": "alert",
+      "title": "Credit Card Payment Due",
+      "message": "Payment of ₹4,000 is due in 3 days",
+      "timestamp": "2024-06-15T10:30:00Z",
+      "read": false
+    },
+    {
+      "id": "2",
+      "type": "info",
+      "title": "Investment Opportunity",
+      "message": "New mutual fund scheme launched with 12% expected returns",
+      "timestamp": "2024-06-14T15:45:00Z",
+      "read": true
+    },
+    {
+      "id": "3",
+      "type": "success",
+      "title": "EPF Contribution Updated",
+      "message": "Your EPF balance has been updated to ₹2,11,111",
+      "timestamp": "2024-06-13T09:15:00Z",
+      "read": false
+    }
+  ],
+  "quickActions": [
+    {
+      "id": "addMoney",
+      "title": "Add Money",
+      "icon": "plus",
+      "action": "transfer"
+    },
+    {
+      "id": "payBills",
+      "title": "Pay Bills",
+      "icon": "creditCard",
+      "action": "payment"
+    },
+    {
+      "id": "investNow",
+      "title": "Invest Now",
+      "icon": "trendingUp",
+      "action": "investment"
+    },
+    {
+      "id": "viewReports",
+      "title": "View Reports",
+      "icon": "fileText",
+      "action": "reports"
+    },
+    {
+      "id": "setGoals",
+      "title": "Set Goals",
+      "icon": "target",
+      "action": "goals"
+    },
+    {
+      "id": "riskAssessment",
+      "title": "Risk Assessment",
+      "icon": "shield",
+      "action": "risk"
+    }
+  ],
+  "dataSummary": {
+    "totalAssets": 750726,
+    "totalLiabilities": 64000,
+    "netWorth": 686726,
+    "creditScore": 746,
+    "totalTransactions": 70,
+    "investmentReturns": 136.63,
+    "epfBalance": 211111,
+    "stockHoldings": 200642,
+    "mutualFundValue": 177605,
+    "savingsBalance": 195297,
+    "usSecuritiesValue": 30071,
+    "creditCardOutstanding": 4000,
+    "totalCreditAccounts": 6,
+    "activeCreditAccounts": 6,
+    "lastDataUpdate": "2024-06-15T10:30:00Z"
+  }
+}
+```
+
+## Processing Steps
+
+### 1. Authentication
+- Extract `PhoneNumber` and `sessionID` from the request
+- Validate the session before proceeding
+
+### 2. Call All 6 FI MCP Endpoints
+The agent must call these endpoints in sequence:
+1. **Bank Accounts Endpoint** - Get savings and current account data
+2. **Mutual Funds Endpoint** - Get mutual fund portfolio data
+3. **Stocks Endpoint** - Get Indian stock holdings data
+4. **US Stocks Endpoint** - Get US securities data
+5. **Credit Cards Endpoint** - Get credit card and outstanding data
+6. **User Profile Endpoint** - Get user profile and preferences
+
+### 3. Data Consolidation
+For each endpoint response:
+- Extract relevant data fields
+- Calculate derived values (change percentages, totals)
+- Format data according to the specified structure
+- Handle missing data with appropriate defaults
+
+### 4. Widget Generation
+Create each widget with:
+- **Card Widgets**: For bank accounts, mutual funds, stocks, US stocks
+  - Include current value, change percentage, chart data
+  - Use appropriate colors and formatting
+- **Chart Widgets**: For expenses, credit cards, credit score, net worth, assets
+  - Include chart type, labels, datasets
+  - Use consistent color schemes
+
+### 5. Data Summary Calculation
+Calculate comprehensive summary including:
+- Total assets and liabilities
+- Net worth
+- Investment returns
+- Account balances
+- Transaction counts
+
+### 6. Notification Processing
+Process and format notifications from all sources:
+- Payment reminders
+- Investment opportunities
+- Account updates
+
+### 7. Quick Actions
+Define available actions based on user's financial profile and permissions.
+
+## Error Handling
+
+### Missing Data
+- If an endpoint fails, use default values or previous data
+- Log the error but continue processing other endpoints
+- Provide fallback data for critical widgets
+
+### Authentication Errors
+- Return appropriate error message
+- Suggest re-authentication if session expired
+
+### Data Validation
+- Validate all numeric values
+- Ensure required fields are present
+- Format currency values consistently
+
+## Extensibility
+
+### Adding New Widgets
+To add new widgets later:
+1. Create new widget object with unique ID
+2. Add to dashboardWidgets array
+3. Update dataSummary if needed
+4. Ensure proper chart configuration
+
+### Adding New Endpoints
+To add new data sources:
+1. Call new endpoint in step 2
+2. Extract relevant data
+3. Create corresponding widgets
+4. Update summary calculations
+
+### Customizing Response Format
+The response structure is designed to be:
+- **Modular**: Each widget is independent
+- **Extensible**: Easy to add new widgets
+- **Consistent**: Standardized data format
+- **Backward Compatible**: Existing clients continue to work
+
+## Implementation Notes
+
+- Use the FI MCP tool to call endpoints
+- Process responses asynchronously for better performance
+- Cache responses when appropriate
+- Update lastUpdated timestamp with current time
+- Ensure all monetary values are in INR
+- Use consistent date formatting (YYYY-MM-DD)
+- Apply proper error handling for each endpoint call 

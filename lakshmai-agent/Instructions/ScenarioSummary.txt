@@ -1,0 +1,302 @@
+# LakshmAI Agent - Scenario Summary
+
+## Overview
+The LakshmAI Agent handles 4 distinct scenarios based on user input patterns and requirements:
+
+1. **HomeDashboard** - Formatted JSON input, returns complete dashboard JSON
+2. **Projection** - Future/goal queries, returns text + chartConfig + goals list
+3. **Analysis** - Past/current analysis, returns text + chartConfig
+4. **Misc** - General queries, returns text only
+
+## Scenario Detection Logic
+
+### 1. HomeDashboard Detection
+**Input Format**: Structured JSON with RequestType, PhoneNumber, sessionID, userId
+**Keywords**: "dashboard", "overview", "summary", "show me my", "financial dashboard", "home", "main page"
+**Response**: Complete dashboard JSON with all 11 widgets
+
+**Example Input**:
+```json
+{
+  "RequestType": "HomeDashboard",
+  "PhoneNumber": "9876543210",
+  "sessionID": "session123",
+  "userId": "user456"
+}
+```
+
+**Example Output**: Complete dashboard JSON with all widgets, user profile, notifications, quick actions, and data summary.
+
+### 2. Projection Detection
+**Input Format**: Natural language text
+**Keywords**: "project", "forecast", "future", "what if", "scenario", "planning", "goals", "retirement", "savings", "investment strategy", "debt payoff", "optimize", "target", "achieve", "reach", "by when", "how long", "timeline"
+**Response**: Text analysis + chartConfig JSON + actionable goals list
+
+**Example Input**: "What if I increase my savings by ₹10,000? How long to reach ₹25 lakhs?"
+
+**Example Output**:
+```
+## Financial Projection Analysis
+[Detailed text analysis with scenarios, timelines, and recommendations]
+
+### Chart Configuration
+```json
+{
+  "chartConfig": {
+    "type": "line",
+    "title": "Net Worth Projection to ₹25 Lakhs",
+    "data": { ... },
+    "events": [ ... ]
+  }
+}
+```
+
+### Goals List
+```
+## Actionable Goals to Accomplish
+
+### High Priority Goals
+1. **Increase Monthly Savings** - Boost from ₹25,000 to ₹35,000/month
+   - Timeline: Start immediately
+   - Impact: Save 2.6 years to reach ₹25 lakhs
+   ...
+```
+
+### 3. Analysis Detection
+**Input Format**: Natural language text
+**Keywords**: "analyze", "analysis", "review", "assess", "evaluate", "financial health", "performance", "how am I doing", "strengths and weaknesses", "current", "past", "historical", "trend", "compare", "vs", "versus"
+**Response**: Text analysis + chartConfig JSON
+
+**Example Input**: "Analyze my current financial health and investment performance"
+
+**Example Output**:
+```
+## Financial Health Analysis
+[Detailed analysis with executive summary, breakdowns, and recommendations]
+
+### Chart Configuration
+```json
+{
+  "chartConfig": {
+    "type": "multi",
+    "charts": [
+      {
+        "id": "portfolio_allocation",
+        "type": "doughnut",
+        "title": "Investment Portfolio Allocation",
+        "data": { ... }
+      },
+      {
+        "id": "performance_trend",
+        "type": "line",
+        "title": "Portfolio Performance Trend",
+        "data": { ... }
+      }
+    ]
+  }
+}
+```
+
+### 4. Misc Detection
+**Input Format**: Natural language text
+**Keywords**: "help", "advice", "recommend", "suggest", "how to", "improve", "better", "tips", "guide", "explain", "understand", "what is", "tell me about", "general", "info"
+**Response**: Text only
+
+**Example Input**: "How can I improve my credit score?"
+
+**Example Output**:
+```
+## Understanding Credit Scores
+
+### What is a Credit Score?
+A credit score is a 3-digit number (300-900) that represents your creditworthiness...
+
+### How to Improve Your Credit Score
+
+**Immediate Actions (This Month):**
+1. **Pay Off Credit Card Balance** - Reduce your ₹380 outstanding balance to ₹0
+2. **Request Credit Limit Increase** - Ask your bank to increase your credit limit
+3. **Check Your Credit Report** - Look for any errors or discrepancies
+
+[Continue with detailed, conversational advice...]
+```
+
+## Processing Flow
+
+### Step 1: Input Analysis
+1. **Check for JSON structure** - If structured JSON with RequestType, handle as HomeDashboard
+2. **Analyze keywords** - Use keyword detection for other scenarios
+3. **Determine intent** - Classify into appropriate scenario
+
+### Step 2: Data Gathering
+1. **Extract user data** - PhoneNumber, sessionID, userId
+2. **Call FI MCP endpoints** - Gather comprehensive financial data
+3. **Process data** - Calculate metrics, trends, projections
+
+### Step 3: Response Generation
+1. **HomeDashboard**: Generate complete JSON with all widgets
+2. **Projection**: Create text analysis + chartConfig + goals list
+3. **Analysis**: Provide text analysis + chartConfig
+4. **Misc**: Return conversational text response
+
+## Response Format Standards
+
+### HomeDashboard Response
+- **Required**: Complete JSON with all 11 widgets
+- **Widgets**: bankAccounts, mutualFunds, stocks, usStocks, creditCards, netWorth, creditScore, epfBalance, expenseBreakdown, incomeVsExpense, investmentPortfolio
+- **Additional**: userProfile, notifications, quickActions, dataSummary
+
+### Projection Response
+- **Text Analysis**: Detailed explanation with scenarios and timelines
+- **Chart Configuration**: JSON with multiple datasets and events
+- **Goals List**: Prioritized actionable goals with timelines
+
+### Analysis Response
+- **Text Analysis**: Comprehensive financial analysis and insights
+- **Chart Configuration**: Multiple charts for different aspects
+
+### Misc Response
+- **Text Only**: Conversational, educational, helpful responses
+
+## Data Requirements
+
+### For All Scenarios
+- **Currency**: INR (₹)
+- **Date Format**: YYYY-MM-DD
+- **Color Codes**: Valid hex colors for charts
+- **Error Handling**: Graceful fallbacks for missing data
+
+### Chart Configuration Standards
+- **Line Charts**: For trends and projections
+- **Bar Charts**: For comparisons
+- **Pie/Doughnut Charts**: For allocations
+- **Scatter Charts**: For risk-return analysis
+- **Radar Charts**: For multi-dimensional analysis
+
+## Example Usage Patterns
+
+### HomeDashboard
+```
+User: {"RequestType": "HomeDashboard", "PhoneNumber": "9876543210", "sessionID": "session123", "userId": "user456"}
+Agent: [Complete dashboard JSON with all widgets]
+```
+
+### Projection
+```
+User: "What if I invest ₹50,000 more? How long to reach ₹1 crore?"
+Agent: [Text analysis + chartConfig + goals list]
+```
+
+### Analysis
+```
+User: "How is my investment portfolio performing?"
+Agent: [Text analysis + chartConfig]
+```
+
+### Misc
+```
+User: "What is a mutual fund?"
+Agent: [Conversational text explanation]
+```
+
+## Error Handling
+
+### Missing Data
+- Use reasonable defaults
+- Continue processing with available data
+- Provide helpful error messages
+
+### Invalid Inputs
+- Request clarification for unclear queries
+- Suggest alternative approaches
+- Provide general guidance when specific data unavailable
+
+### API Failures
+- Continue with cached or default data
+- Log errors for debugging
+- Provide fallback responses
+
+## Performance Optimization
+
+### Data Caching
+- Cache FI MCP responses
+- Store user preferences
+- Maintain session data
+
+### Parallel Processing
+- Call multiple endpoints simultaneously
+- Process data in background
+- Optimize response generation
+
+### Response Optimization
+- Compress large JSON responses
+- Optimize chart configurations
+- Minimize redundant data
+
+## Extensibility
+
+### Adding New Scenarios
+1. Define detection keywords
+2. Create response format
+3. Add processing logic
+4. Update documentation
+
+### Adding New Chart Types
+1. Define chart configuration
+2. Add to response templates
+3. Update processing logic
+4. Test with sample data
+
+### Adding New Data Sources
+1. Integrate new endpoints
+2. Update data processing
+3. Modify response generation
+4. Validate data consistency
+
+## Best Practices
+
+### Response Quality
+- Always provide actionable insights
+- Use clear, simple language
+- Include specific numbers and timelines
+- Encourage follow-up questions
+
+### Data Accuracy
+- Validate all calculations
+- Cross-reference multiple sources
+- Provide confidence intervals
+- Flag uncertain projections
+
+### User Experience
+- Respond quickly and accurately
+- Provide helpful error messages
+- Maintain conversation context
+- Personalize responses when possible
+
+## Testing Scenarios
+
+### HomeDashboard Testing
+- Valid JSON input
+- Missing required fields
+- Invalid session data
+- API endpoint failures
+
+### Projection Testing
+- Various goal types (retirement, home, education)
+- Different time horizons
+- Risk tolerance levels
+- Market condition scenarios
+
+### Analysis Testing
+- Portfolio performance
+- Financial health assessment
+- Comparative analysis
+- Trend identification
+
+### Misc Testing
+- Educational queries
+- Advice requests
+- General questions
+- Complex scenarios
+
+This comprehensive approach ensures the LakshmAI Agent can handle all types of financial queries effectively while providing personalized, actionable insights to users. 

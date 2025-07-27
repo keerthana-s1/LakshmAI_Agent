@@ -1,0 +1,344 @@
+# Analysis Handler Instructions
+
+## Overview
+Handle past and current financial analysis queries. Return standardized response with TextResp and ChartConfigResp (no ToDoResp).
+
+## CRITICAL: Data Fetching First
+**IMPORTANT**: Before generating ANY analysis, you MUST first call all MCP endpoints to fetch complete financial data.
+
+### Required MCP Data Fetching Steps:
+1. **Call Bank Accounts Endpoint** - Get account balances and transaction history
+2. **Call Mutual Funds Endpoint** - Get mutual fund holdings and performance
+3. **Call Stocks Endpoint** - Get stock portfolio and market data
+4. **Call US Stocks Endpoint** - Get international stock holdings
+5. **Call Credit Cards Endpoint** - Get credit card balances and utilization
+6. **Call User Profile Endpoint** - Get user demographics and preferences
+
+### Data Fetching Protocol:
+- **ALWAYS** fetch MCP data first, before any analysis
+- **WAIT** for all MCP calls to complete before analysis
+- **USE** the fetched data for all calculations and insights
+- **NEVER** respond with blank or incomplete data
+- **ONLY** generate response after all data is available
+
+## Detection Keywords
+- "analyze", "analysis", "review", "assess", "evaluate"
+- "financial health", "performance", "how am I doing"
+- "strengths and weaknesses", "current", "past", "historical"
+- "trend", "compare", "vs", "versus", "benchmark"
+- "portfolio", "investment", "returns", "performance"
+
+## Processing Workflow
+
+### Step 1: Data Fetching (REQUIRED)
+```
+1. Call MCP Bank Accounts → Get account balances, transactions
+2. Call MCP Mutual Funds → Get fund holdings, NAV, returns
+3. Call MCP Stocks → Get stock portfolio, market prices
+4. Call MCP US Stocks → Get international holdings
+5. Call MCP Credit Cards → Get card balances, utilization
+6. Call MCP User Profile → Get user details, preferences
+```
+
+### Step 2: Data Consolidation
+- Combine all MCP responses into unified dataset
+- Calculate derived metrics (net worth, savings rate, etc.)
+- Prepare data for analysis and visualization
+
+### Step 3: Analysis Generation
+- Analyze user query for specific analysis requirements
+- Generate comprehensive insights using MCP data
+- Create multiple charts for different aspects
+
+### Step 4: Response Generation
+- Create detailed text analysis using MCP data
+- Generate chart configurations with real data
+- Return standardized response with TextResp + ChartConfigResp
+
+## Standard Response Format
+Return responses in this standardized JSON format:
+
+```json
+{
+  "TextResp": "Comprehensive financial analysis and insights",
+  "ChartConfigResp": {
+    "chartConfig": {
+      "type": "line|bar|pie|doughnut|multi",
+      "title": "Chart Title",
+      "data": { ... },
+      "events": [ ... ]
+    }
+  },
+  "ToDoResp": null
+}
+```
+
+## Example Scenarios
+
+### Example 1: Portfolio Performance Analysis
+
+**Input**: "Analyze my investment portfolio performance and diversification"
+
+**Processing Steps**:
+1. **Fetch MCP Data**: Call all 6 MCP endpoints
+2. **Extract Portfolio Data**: Use MCP data for current holdings and performance
+3. **Calculate Metrics**: Based on MCP data, calculate performance metrics
+4. **Generate Analysis**: Create comprehensive portfolio analysis
+
+**Response**:
+```json
+{
+  "TextResp": "## Investment Portfolio Analysis\n\n### Executive Summary\nYour investment portfolio shows **Good** performance with a total value of ₹9,460, representing 43% of your net worth. The portfolio has achieved a 5% return over the past week, outperforming the market average. However, there are opportunities to improve diversification and risk management.\n\n### Portfolio Breakdown\n\n**Asset Allocation:**\n- Mutual Funds: ₹5,600 (59% of portfolio)\n- Indian Stocks: ₹2,800 (30% of portfolio)\n- US Stocks: ₹1,060 (11% of portfolio)\n\n**Performance Metrics:**\n- Total Return: 5% (1-week period)\n- Risk-Adjusted Return: 8.2% (Sharpe ratio)\n- Diversification Score: 7/10\n- Volatility: 12% (moderate)\n\n### Detailed Analysis\n\n**Mutual Funds (₹5,600):**\n✅ **Strengths:**\n- Good fund selection with diversified holdings\n- Consistent performance across funds\n- Professional management reducing risk\n- Tax-efficient structure\n\n⚠️ **Areas for Improvement:**\n- Consider adding international funds\n- Review expense ratios for optimization\n- Increase systematic investment plans\n\n**Indian Stocks (₹2,800):**\n✅ **Strengths:**\n- Good stock selection with growth potential\n- Sector diversification (IT, Banking, FMCG)\n- Regular monitoring and rebalancing\n\n⚠️ **Areas for Improvement:**\n- Consider adding mid-cap stocks for growth\n- Review individual stock performance\n- Increase position sizing for top performers\n\n**US Stocks (₹1,060):**\n✅ **Strengths:**\n- Geographic diversification\n- Exposure to global markets\n- Currency diversification benefits\n\n⚠️ **Areas for Improvement:**\n- Increase allocation to 15-20%\n- Add more US stocks for diversification\n- Consider sector-specific ETFs\n\n### Risk Analysis\n\n**Current Risk Profile:**\n- **Market Risk**: Moderate (diversified across asset classes)\n- **Currency Risk**: Low (primarily INR investments)\n- **Interest Rate Risk**: Low (equity-focused portfolio)\n- **Liquidity Risk**: Low (liquid investments)\n\n**Risk Metrics:**\n- Beta: 0.85 (less volatile than market)\n- Maximum Drawdown: 8% (acceptable)\n- VaR (95%): 6% (moderate risk)\n\n### Performance Comparison\n\n**Benchmark Comparison:**\n- Your Portfolio: 5% (1 week)\n- Nifty 50: 3.2% (1 week)\n- BSE Sensex: 2.8% (1 week)\n- **Outperformance**: +1.8% vs market\n\n**Peer Comparison:**\n- Average Retail Investor: 2.5%\n- Your Performance: 5.0%\n- **Outperformance**: +2.5% vs peers\n\n### Recommendations\n\n**Immediate Actions (Next 30 Days):**\n1. **Rebalance Portfolio** - Adjust to target allocation\n2. **Review Underperformers** - Exit or reduce poor performers\n3. **Increase SIP Amounts** - Boost systematic investments\n\n**Short-term Goals (3-6 Months):**\n1. **Enhance Diversification** - Add international funds\n2. **Optimize Tax Efficiency** - Review tax-saving investments\n3. **Increase US Exposure** - Target 15% allocation\n\n**Long-term Strategy (6-12 Months):**\n1. **Sector Rotation** - Adjust based on market cycles\n2. **Risk Management** - Implement stop-loss strategies\n3. **Goal-based Investing** - Align with financial objectives\n\n### Key Insights\n\n**Top 3 Strengths:**\n1. **Good Diversification** - Spread across multiple asset classes\n2. **Consistent Performance** - Above-average returns\n3. **Professional Management** - Mutual funds provide expertise\n\n**Top 3 Areas for Improvement:**\n1. **International Exposure** - Limited global diversification\n2. **Tax Optimization** - Room for better tax efficiency\n3. **Risk Management** - Need for systematic risk controls",
+  
+  "ChartConfigResp": {
+    "chartConfig": {
+      "type": "multi",
+      "title": "Portfolio Analysis Dashboard",
+      "charts": [
+        {
+          "id": "asset_allocation",
+          "type": "doughnut",
+          "title": "Current Asset Allocation",
+          "data": {
+            "labels": ["Mutual Funds", "Indian Stocks", "US Stocks"],
+            "datasets": [{
+              "data": [5600, 2800, 1060],
+              "backgroundColor": ["#10B981", "#EAB308", "#F43F5E"],
+              "hoverBackgroundColor": ["#059669", "#D97706", "#E11D48"]
+            }]
+          },
+          "options": {
+            "plugins": {
+              "legend": {
+                "position": "bottom"
+              }
+            }
+          }
+        },
+        {
+          "id": "performance_trend",
+          "type": "line",
+          "title": "Portfolio Performance Trend (Last 7 Days)",
+          "data": {
+            "labels": ["Jul 22", "Jul 23", "Jul 24", "Jul 25", "Jul 26", "Jul 27", "Jul 28"],
+            "datasets": [
+              {
+                "label": "Your Portfolio",
+                "data": [9000, 9100, 9200, 9300, 9400, 9500, 9460],
+                "borderColor": "#10B981",
+                "backgroundColor": "rgba(16, 185, 129, 0.1)",
+                "fill": true
+              },
+              {
+                "label": "Nifty 50",
+                "data": [9000, 9050, 9100, 9120, 9150, 9180, 9200],
+                "borderColor": "#EF4444",
+                "backgroundColor": "rgba(239, 68, 68, 0.1)",
+                "fill": true
+              }
+            ]
+          },
+          "options": {
+            "scales": {
+              "y": {
+                "beginAtZero": false,
+                "ticks": {
+                  "callback": "function(value) { return '₹' + (value/1000).toFixed(0) + 'K'; }"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "risk_return_scatter",
+          "type": "scatter",
+          "title": "Risk-Return Analysis",
+          "data": {
+            "datasets": [
+              {
+                "label": "Your Portfolio",
+                "data": [{"x": 12, "y": 5.0}],
+                "backgroundColor": "#10B981",
+                "pointRadius": 8
+              },
+              {
+                "label": "Nifty 50",
+                "data": [{"x": 15, "y": 3.2}],
+                "backgroundColor": "#EF4444",
+                "pointRadius": 8
+              },
+              {
+                "label": "BSE Sensex",
+                "data": [{"x": 14, "y": 2.8}],
+                "backgroundColor": "#3B82F6",
+                "pointRadius": 8
+              }
+            ]
+          },
+          "options": {
+            "scales": {
+              "x": {
+                "title": {
+                  "display": true,
+                  "text": "Risk (Volatility %)"
+                }
+              },
+              "y": {
+                "title": {
+                  "display": true,
+                  "text": "Return (%)"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "sector_breakdown",
+          "type": "bar",
+          "title": "Sector Allocation",
+          "data": {
+            "labels": ["Technology", "Banking", "FMCG", "Healthcare", "Energy"],
+            "datasets": [{
+              "label": "Allocation (%)",
+              "data": [35, 25, 20, 15, 5],
+              "backgroundColor": ["#10B981", "#3B82F6", "#EAB308", "#F43F5E", "#8B5CF6"]
+            }]
+          }
+        }
+      ]
+    }
+  },
+  
+  "ToDoResp": null
+}
+```
+
+### Example 2: Financial Health Analysis
+
+**Input**: "How is my overall financial health? What are my strengths and weaknesses?"
+
+**Processing Steps**:
+1. **Fetch MCP Data**: Call all 6 MCP endpoints
+2. **Extract Financial Data**: Use MCP data for current financial position
+3. **Calculate Health Metrics**: Based on MCP data, calculate health scores
+4. **Generate Analysis**: Create comprehensive financial health analysis
+
+**Response**:
+```json
+{
+  "TextResp": "## Comprehensive Financial Health Analysis\n\n### Executive Summary\nYour overall financial health is **Good** with a net worth of ₹21,760 and positive cash flow. You demonstrate good financial habits with consistent savings and investment discipline. However, there are areas for improvement in debt management and emergency fund adequacy.\n\n### Financial Health Score: 7.2/10\n\n**Score Breakdown:**\n- Savings Rate: 8/10 (25% is excellent)\n- Investment Performance: 7/10 (5% return, above average)\n- Debt Management: 5/10 (high credit utilization)\n- Emergency Fund: 4/10 (only 2.2 months)\n- Insurance: 6/10 (basic coverage)\n- Tax Efficiency: 7/10 (good tax planning)\n\n### Detailed Analysis\n\n**Cash Flow Analysis:**\n- Monthly Income: ₹10,000\n- Monthly Expenses: ₹7,500\n- Savings Rate: 25% (excellent)\n- Discretionary Spending: 40% of income (high)\n\n**Investment Analysis:**\n- Total Investments: ₹9,460 (43% of net worth)\n- Portfolio Return: 5% (above average)\n- Diversification: Good across asset classes\n- Risk Management: Moderate\n\n**Debt Analysis:**\n- Total Outstanding: ₹380\n- Credit Utilization: 65% (should be <30%)\n- Interest Rate: 18% (high)\n- Payment History: Good\n\n**Emergency Fund Analysis:**\n- Current Fund: ₹12,000\n- Monthly Expenses: ₹7,500\n- Coverage: 2.2 months (should be 6 months)\n- Target Fund: ₹45,000\n\n### Strengths and Weaknesses\n\n**Top 3 Strengths:**\n1. **Excellent Savings Rate** - 25% is well above the recommended 20%\n2. **Good Investment Discipline** - Consistent monthly investments\n3. **Positive Cash Flow** - Income exceeds expenses consistently\n\n**Top 3 Areas for Improvement:**\n1. **Emergency Fund Inadequacy** - Only 2.2 months vs recommended 6 months\n2. **High Credit Utilization** - 65% vs recommended <30%\n3. **Limited Insurance Coverage** - Basic coverage needs enhancement\n\n### Risk Assessment\n\n**Low Risk Factors:**\n✅ Stable income source\n✅ Good savings habits\n✅ Diversified investments\n✅ Positive net worth\n\n**Medium Risk Factors:**\n⚠️ Insufficient emergency fund\n⚠️ High credit utilization\n⚠️ Limited insurance coverage\n\n**High Risk Factors:**\n❌ No identified high risks\n\n### Recommendations\n\n**Immediate Actions (Next 30 Days):**\n1. **Pay Off Credit Card** - Reduce utilization to <30%\n2. **Start Emergency Fund** - Begin building 6-month fund\n3. **Review Insurance** - Assess coverage adequacy\n\n**Short-term Goals (3-6 Months):**\n1. **Complete Emergency Fund** - Reach ₹45,000 target\n2. **Optimize Debt** - Refinance high-interest debt\n3. **Enhance Insurance** - Increase coverage levels\n\n**Long-term Strategy (6-12 Months):**\n1. **Increase Investments** - Boost portfolio allocation\n2. **Tax Optimization** - Maximize tax-saving investments\n3. **Goal Planning** - Align investments with financial goals\n\n### Benchmark Comparison\n\n**Your Metrics vs. Recommended:**\n- Savings Rate: 25% vs 20% (✅ Better)\n- Emergency Fund: 2.2 months vs 6 months (❌ Below)\n- Credit Utilization: 65% vs <30% (❌ Above)\n- Investment Allocation: 43% vs 40% (✅ Better)\n\n**Peer Comparison:**\n- Average Savings Rate: 15%\n- Your Savings Rate: 25%\n- **Outperformance**: +10 percentage points\n\n### Financial Goals Progress\n\n**Short-term Goals (1 year):**\n- Emergency Fund: 30% complete\n- Debt Freedom: 95% complete\n- Investment Growth: On track\n\n**Medium-term Goals (3-5 years):**\n- Home Down Payment: 15% complete\n- Investment Portfolio: 25% complete\n- Retirement Planning: 10% complete\n\n**Long-term Goals (10+ years):**\n- Retirement Corpus: 5% complete\n- Financial Independence: 8% complete",
+  
+  "ChartConfigResp": {
+    "chartConfig": {
+      "type": "multi",
+      "title": "Financial Health Dashboard",
+      "charts": [
+        {
+          "id": "health_score_radar",
+          "type": "radar",
+          "title": "Financial Health Score Breakdown",
+          "data": {
+            "labels": ["Savings Rate", "Investment Performance", "Debt Management", "Emergency Fund", "Insurance", "Tax Efficiency"],
+            "datasets": [{
+              "label": "Your Score",
+              "data": [8, 7, 5, 4, 6, 7],
+              "borderColor": "#10B981",
+              "backgroundColor": "rgba(16, 185, 129, 0.2)",
+              "fill": true
+            }, {
+              "label": "Recommended",
+              "data": [7, 6, 7, 8, 7, 6],
+              "borderColor": "#EF4444",
+              "backgroundColor": "rgba(239, 68, 68, 0.2)",
+              "fill": true
+            }]
+          },
+          "options": {
+            "scales": {
+              "r": {
+                "beginAtZero": true,
+                "max": 10
+              }
+            }
+          }
+        },
+        {
+          "id": "cash_flow_analysis",
+          "type": "bar",
+          "title": "Monthly Cash Flow Analysis",
+          "data": {
+            "labels": ["Income", "Expenses", "Savings", "Investments"],
+            "datasets": [{
+              "label": "Amount (₹)",
+              "data": [10000, 7500, 2500, 2000],
+              "backgroundColor": ["#10B981", "#EF4444", "#3B82F6", "#EAB308"]
+            }]
+          }
+        },
+        {
+          "id": "net_worth_trend",
+          "type": "line",
+          "title": "Net Worth Trend (Last 7 Days)",
+          "data": {
+            "labels": ["Jul 22", "Jul 23", "Jul 24", "Jul 25", "Jul 26", "Jul 27", "Jul 28"],
+            "datasets": [{
+              "label": "Net Worth",
+              "data": [18000, 18640, 19260, 19740, 20480, 21300, 21760],
+              "borderColor": "#064E3B",
+              "backgroundColor": "rgba(6, 78, 59, 0.1)",
+              "fill": true
+            }]
+          }
+        },
+        {
+          "id": "debt_breakdown",
+          "type": "doughnut",
+          "title": "Debt Breakdown",
+          "data": {
+            "labels": ["Credit Card", "Personal Loan", "Home Loan", "Other"],
+            "datasets": [{
+              "data": [380, 0, 0, 0],
+              "backgroundColor": ["#EF4444", "#3B82F6", "#10B981", "#EAB308"]
+            }]
+          }
+        }
+      ]
+    }
+  },
+  
+  "ToDoResp": null
+}
+```
+
+## Processing Guidelines
+
+### Data Requirements
+1. **Current Financial Data**: Extract from MCP endpoints
+2. **Historical Data**: Use available trend data
+3. **Benchmark Data**: Compare with market indices
+4. **Peer Comparison**: Use industry averages
+
+### Analysis Components
+1. **Quantitative Analysis**: Numbers, ratios, percentages
+2. **Qualitative Assessment**: Strengths, weaknesses, trends
+3. **Comparative Analysis**: Benchmarks, peers, targets
+4. **Risk Assessment**: Various risk factors and mitigation
+
+### Chart Configuration Standards
+1. **Multiple Chart Types**: Line, bar, pie, doughnut, radar
+2. **Comparative Elements**: Current vs target, you vs peers
+3. **Color Coding**: Consistent colors for categories
+4. **Interactive Features**: Hover, zoom, tooltips
+
+### Analysis Structure
+1. **Executive Summary**: Overall assessment and score
+2. **Detailed Breakdown**: Category-wise analysis
+3. **Strengths/Weaknesses**: Clear identification
+4. **Recommendations**: Actionable next steps
+5. **Benchmarks**: Comparison with standards
+
+### Error Handling
+1. **Missing Data**: Use reasonable defaults
+2. **Calculation Errors**: Provide conservative estimates
+3. **API Failures**: Continue with available data
+4. **Invalid Inputs**: Request clarification 

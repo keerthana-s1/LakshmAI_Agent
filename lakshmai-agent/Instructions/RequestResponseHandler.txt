@@ -1,0 +1,264 @@
+# Request Response Handler Instructions
+
+## Request Format Handling
+
+### Supported Request Types
+The agent must handle these request types:
+
+1. **HomeDashboard** - Main dashboard request
+2. **Login** - Authentication request (existing)
+3. **Analytics** - Financial analysis request (existing)
+
+### HomeDashboard Request Format
+```json
+{
+  "RequestType": "HomeDashboard",
+  "Request": {
+    "PhoneNumber": "9876543210",
+    "sessionID": "mcp-session-abc123",
+    "userId": "3333333333"
+  }
+}
+```
+
+### Response Format for HomeDashboard
+The agent must return the exact JSON structure provided in the HomeDashboardHandler.txt file.
+
+## Processing Logic
+
+### Step 1: Request Validation
+- Check if RequestType is "HomeDashboard"
+- Validate PhoneNumber (10 digits)
+- Validate sessionID format
+- Extract userId if provided
+
+### Step 2: Authentication
+- Use existing login mechanism if session is invalid
+- Ensure user is authenticated before proceeding
+
+### Step 3: FI MCP Endpoint Calls
+Call all 6 endpoints in parallel or sequence:
+
+1. **Bank Accounts Data**
+   - Endpoint: `/bank-accounts`
+   - Extract: account balances, transaction history
+   - Calculate: current value, change percentage
+
+2. **Mutual Funds Data**
+   - Endpoint: `/mutual-funds`
+   - Extract: fund values, performance data
+   - Calculate: total value, returns
+
+3. **Stocks Data**
+   - Endpoint: `/stocks`
+   - Extract: Indian stock holdings
+   - Calculate: portfolio value, performance
+
+4. **US Stocks Data**
+   - Endpoint: `/us-stocks`
+   - Extract: US securities data
+   - Calculate: total value, currency conversion
+
+5. **Credit Cards Data**
+   - Endpoint: `/credit-cards`
+   - Extract: outstanding balances, payment history
+   - Calculate: total outstanding, due amounts
+
+6. **User Profile Data**
+   - Endpoint: `/user-profile`
+   - Extract: personal info, preferences, goals
+   - Calculate: account counts, risk profile
+
+### Step 4: Data Transformation
+Transform each endpoint response into the required widget format:
+
+#### Card Widgets (bankAccounts, mutualFunds, stocks, usStocks)
+```json
+{
+  "id": "widgetId",
+  "title": "Widget Title",
+  "type": "card",
+  "chartType": "line",
+  "chartData": {
+    "labels": ["date1", "date2", "date3"],
+    "datasets": [{
+      "label": "Value",
+      "data": [value1, value2, value3],
+      "backgroundColor": "#color",
+      "borderColor": "#color"
+    }]
+  },
+  "currentValue": currentValue,
+  "currency": "₹",
+  "changePercentage": percentage,
+  "changeType": "positive|negative"
+}
+```
+
+#### Chart Widgets (expenseBreakdown, creditCardOutstanding, etc.)
+```json
+{
+  "id": "widgetId",
+  "title": "Widget Title",
+  "type": "chart",
+  "dashboard": "homeDashboard",
+  "chartType": "line|bar|pie|doughnut",
+  "chartData": {
+    "labels": ["label1", "label2"],
+    "datasets": [{
+      "label": "Data Label",
+      "data": [value1, value2],
+      "backgroundColor": ["#color1", "#color2"]
+    }]
+  }
+}
+```
+
+### Step 5: Summary Calculation
+Calculate comprehensive data summary:
+
+```json
+{
+  "dataSummary": {
+    "totalAssets": sum_of_all_assets,
+    "totalLiabilities": sum_of_all_liabilities,
+    "netWorth": totalAssets - totalLiabilities,
+    "creditScore": current_credit_score,
+    "totalTransactions": transaction_count,
+    "investmentReturns": calculated_returns,
+    "epfBalance": epf_amount,
+    "stockHoldings": indian_stocks_value,
+    "mutualFundValue": mutual_funds_value,
+    "savingsBalance": bank_balance,
+    "usSecuritiesValue": us_stocks_value,
+    "creditCardOutstanding": total_outstanding,
+    "totalCreditAccounts": credit_account_count,
+    "activeCreditAccounts": active_credit_accounts,
+    "lastDataUpdate": current_timestamp
+  }
+}
+```
+
+### Step 6: Notification Processing
+Process notifications from all sources:
+- Payment reminders
+- Investment opportunities
+- Account updates
+- Credit score changes
+
+### Step 7: Quick Actions
+Define available actions based on user profile:
+- Add Money
+- Pay Bills
+- Invest Now
+- View Reports
+- Set Goals
+- Risk Assessment
+
+## Error Handling
+
+### Endpoint Failures
+- If an endpoint fails, use default/previous data
+- Continue processing other endpoints
+- Log errors for debugging
+
+### Data Validation
+- Ensure all numeric values are valid
+- Check for required fields
+- Validate date formats
+- Verify currency formatting
+
+### Authentication Issues
+- Return clear error message
+- Suggest re-authentication
+- Provide fallback response
+
+## Response Structure Validation
+
+### Required Fields
+- dashboardConfig
+- dashboardWidgets (array)
+- userProfile
+- notifications (array)
+- quickActions (array)
+- dataSummary
+
+### Widget Requirements
+Each widget must have:
+- Unique ID
+- Title
+- Type (card or chart)
+- Chart configuration (if applicable)
+- Current values and calculations
+
+### Data Consistency
+- All monetary values in INR
+- Consistent date format (YYYY-MM-DD)
+- Proper currency symbol (₹)
+- Valid color codes for charts
+
+## Extensibility Features
+
+### Adding New Request Types
+1. Add new RequestType to supported types
+2. Create corresponding processing logic
+3. Define response format
+4. Update validation rules
+
+### Adding New Widgets
+1. Create widget object with unique ID
+2. Add to dashboardWidgets array
+3. Update dataSummary calculations
+4. Ensure proper chart configuration
+
+### Adding New Endpoints
+1. Add endpoint call in step 3
+2. Extract relevant data
+3. Create corresponding widgets
+4. Update summary calculations
+
+## Implementation Guidelines
+
+### Performance Optimization
+- Call endpoints in parallel when possible
+- Cache responses for better performance
+- Use async processing for large datasets
+
+### Data Freshness
+- Update lastUpdated timestamp
+- Check data staleness
+- Refresh data when needed
+
+### Security
+- Validate all input parameters
+- Sanitize data before processing
+- Handle sensitive information properly
+
+### Logging
+- Log all endpoint calls
+- Track processing time
+- Record errors for debugging
+- Monitor data quality
+
+## Example Usage
+
+### Request
+```json
+{
+  "RequestType": "HomeDashboard",
+  "Request": {
+    "PhoneNumber": "9876543210",
+    "sessionID": "mcp-session-abc123",
+    "userId": "3333333333"
+  }
+}
+```
+
+### Expected Response
+The agent must return the exact JSON structure as specified in HomeDashboardHandler.txt, with:
+- All 11 dashboard widgets
+- Complete user profile
+- Notifications array
+- Quick actions array
+- Comprehensive data summary
+- Proper error handling for missing data 

@@ -1,0 +1,182 @@
+# FI MCP Endpoints Instructions
+
+## Overview
+The FI MCP (Financial Information Model Context Protocol) provides access to comprehensive financial data through various endpoints. Each endpoint returns structured JSON data that can be used to build financial dashboards and analytics.
+
+## Response Data Structure
+
+The FI MCP endpoints return data in the following JSON structure:
+
+### 1. Dashboard Configuration
+```json
+{
+  "dashboardConfig": {
+    "theme": "dark",
+    "currency": "INR", 
+    "dateFormat": "YYYY-MM-DD",
+    "refreshInterval": 300000,
+    "maxDataPoints": 100,
+    "dataSource": "FI-MCP API",
+    "lastUpdated": "2024-06-15T10:30:00Z"
+  }
+}
+```
+
+### 2. Dashboard Widgets
+The response contains multiple widgets representing different financial categories:
+
+#### Bank Accounts Widget
+- **ID**: "bankAccounts"
+- **Type**: Card widget with line chart
+- **Data**: Balance trends over time
+- **Features**: Current value, change percentage, currency symbol
+
+#### Mutual Funds Widget  
+- **ID**: "mutualFunds"
+- **Type**: Card widget with line chart
+- **Data**: Fund value trends
+- **Features**: Current value, performance metrics
+
+#### Stocks Widget
+- **ID**: "stocks" 
+- **Type**: Card widget with line chart
+- **Data**: Indian stock portfolio value
+- **Features**: Current value, change tracking
+
+#### US Stocks Widget
+- **ID**: "usStocks"
+- **Type**: Card widget with line chart  
+- **Data**: US securities portfolio value
+- **Features**: Current value, performance tracking
+
+#### Expense Breakdown Widget
+- **ID**: "expenseBreakdown"
+- **Type**: Chart widget (doughnut)
+- **Data**: Categorized expenses
+- **Features**: Total expenses, period tracking
+
+#### Credit Card Outstanding Widget
+- **ID**: "creditCardOutstanding" 
+- **Type**: Chart widget (line)
+- **Data**: Outstanding balance trends
+- **Features**: Current outstanding, card details
+
+#### Credit Score History Widget
+- **ID**: "creditScoreHistory"
+- **Type**: Chart widget (line)
+- **Data**: Credit score trends over time
+- **Features**: Current score, historical data
+
+#### Net Worth Overview Widget
+- **ID**: "netWorthOverview"
+- **Type**: Chart widget (bar)
+- **Data**: Assets vs Liabilities
+- **Features**: Net worth calculation
+
+#### Asset Breakdown Widget
+- **ID**: "assetBreakdown"
+- **Type**: Chart widget (pie)
+- **Data**: Asset allocation across categories
+- **Features**: Percentage distribution
+
+#### Mutual Funds History Widget
+- **ID**: "mutualFundsHistory"
+- **Type**: Chart widget (line)
+- **Data**: Multiple fund performance
+- **Features**: Fund comparison, trends
+
+#### US Stocks Bar Chart Widget
+- **ID**: "usStocksBar"
+- **Type**: Chart widget (bar)
+- **Data**: Individual stock performance
+- **Features**: Stock comparison, monthly data
+
+### 3. User Profile
+```json
+{
+  "userProfile": {
+    "name": "John Doe",
+    "email": "john.doe@example.com", 
+    "phone": "+91-9876543210",
+    "riskProfile": "Moderate",
+    "investmentGoals": ["Retirement", "Emergency Fund", "Vacation"],
+    "preferences": {
+      "currency": "INR",
+      "language": "en", 
+      "notifications": true,
+      "theme": "dark"
+    },
+    "accounts": {
+      "bankAccounts": 3,
+      "creditCards": 2,
+      "investmentAccounts": 4,
+      "loanAccounts": 3
+    }
+  }
+}
+```
+
+### 4. Notifications
+Array of user notifications with:
+- **ID**: Unique identifier
+- **Type**: alert, info, success
+- **Title**: Notification title
+- **Message**: Detailed message
+- **Timestamp**: ISO timestamp
+- **Read**: Boolean status
+
+### 5. Quick Actions
+Array of available actions:
+- **ID**: Action identifier
+- **Title**: Action name
+- **Icon**: UI icon reference
+- **Action**: Action type
+
+### 6. Data Summary
+Comprehensive financial summary:
+- Total assets, liabilities, net worth
+- Credit score
+- Transaction counts
+- Investment returns
+- Account balances
+- Last update timestamp
+
+## Usage Instructions
+
+1. **Authentication**: Use session ID and phone number for authentication
+2. **Data Retrieval**: Fetch data from appropriate endpoints based on user request
+3. **Data Processing**: Parse JSON responses and extract relevant information
+4. **Analysis**: Use the structured data for financial analysis and recommendations
+5. **Visualization**: Utilize chart data for creating visual representations
+6. **Updates**: Check lastUpdated timestamp for data freshness
+
+## Chart Data Format
+
+All chart widgets include:
+- **labels**: Array of time periods or categories
+- **datasets**: Array of data series with:
+  - **label**: Series name
+  - **data**: Array of values
+  - **backgroundColor**: Color for visualization
+  - **borderColor**: Border color for line charts
+
+## Currency and Formatting
+
+- **Currency**: INR (₹) by default
+- **Date Format**: YYYY-MM-DD
+- **Number Formatting**: Indian number system
+- **Theme**: Dark theme by default
+
+## Error Handling
+
+- Check for missing or null data in responses
+- Validate data structure before processing
+- Handle authentication errors gracefully
+- Provide fallback values for missing data
+
+## Integration Notes
+
+- All monetary values are in INR unless specified
+- Timestamps are in ISO 8601 format
+- Chart configurations are compatible with Chart.js
+- Widget IDs are unique and consistent across sessions 

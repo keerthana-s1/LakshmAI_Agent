@@ -1,0 +1,415 @@
+# Projection Handler Instructions
+
+## Overview
+Handle future-oriented financial queries including goals, projections, scenarios, and planning. Return standardized response with TextResp, ChartConfigResp, and ToDoResp.
+
+## CRITICAL: Data Fetching First
+**IMPORTANT**: Before generating ANY projection analysis, you MUST first call all MCP endpoints to fetch complete financial data.
+
+### Required MCP Data Fetching Steps:
+1. **Call Bank Accounts Endpoint** - Get account balances and transaction history
+2. **Call Mutual Funds Endpoint** - Get mutual fund holdings and performance
+3. **Call Stocks Endpoint** - Get stock portfolio and market data
+4. **Call US Stocks Endpoint** - Get international stock holdings
+5. **Call Credit Cards Endpoint** - Get credit card balances and utilization
+6. **Call User Profile Endpoint** - Get user demographics and preferences
+
+### Data Fetching Protocol:
+- **ALWAYS** fetch MCP data first, before any analysis
+- **WAIT** for all MCP calls to complete before projections
+- **USE** the fetched data for all calculations and insights
+- **NEVER** respond with blank or incomplete data
+- **ONLY** generate response after all data is available
+
+## Detection Keywords
+- "project", "forecast", "future", "what if", "scenario"
+- "planning", "goals", "retirement", "savings", "investment strategy"
+- "debt payoff", "optimize", "target", "achieve", "reach"
+- "by when", "how long", "timeline", "milestone"
+- "increase", "decrease", "change", "modify", "adjust"
+
+## Processing Workflow
+
+### Step 1: Data Fetching (REQUIRED)
+```
+1. Call MCP Bank Accounts → Get account balances, transactions
+2. Call MCP Mutual Funds → Get fund holdings, NAV, returns
+3. Call MCP Stocks → Get stock portfolio, market prices
+4. Call MCP US Stocks → Get international holdings
+5. Call MCP Credit Cards → Get card balances, utilization
+6. Call MCP User Profile → Get user details, preferences
+```
+
+### Step 2: Data Consolidation
+- Combine all MCP responses into unified dataset
+- Calculate current financial position (net worth, savings rate, etc.)
+- Prepare data for projection calculations
+
+### Step 3: Projection Analysis
+- Analyze user query for projection parameters
+- Calculate multiple scenarios based on MCP data
+- Generate timeline and milestone projections
+
+### Step 4: Response Generation
+- Create detailed text analysis using MCP data
+- Generate chart configuration with projection data
+- Create actionable goals list
+- Return standardized response
+
+## Standard Response Format
+Return responses in this standardized JSON format:
+
+```json
+{
+  "TextResp": "Detailed text analysis with scenarios and timelines",
+  "ChartConfigResp": {
+    "chartConfig": {
+      "type": "line|bar|pie|doughnut|multi",
+      "title": "Chart Title",
+      "data": { ... },
+      "events": [ ... ]
+    }
+  },
+  "ToDoResp": [
+    {
+      "priority": "high|medium|low",
+      "title": "Action Title",
+      "description": "Action description",
+      "timeline": "When to complete",
+      "impact": "Expected impact"
+    }
+  ]
+}
+```
+
+## Example Scenarios
+
+### Example 1: Savings Increase Projection
+
+**Input**: "What if I increase my monthly savings by ₹10,000? How long to reach ₹25 lakhs?"
+
+**Processing Steps**:
+1. **Fetch MCP Data**: Call all 6 MCP endpoints
+2. **Extract Current Position**: Use MCP data for current savings, investments, net worth
+3. **Calculate Projections**: Based on MCP data, calculate scenarios
+4. **Generate Response**: Create comprehensive analysis
+
+**Response**:
+```json
+{
+  "TextResp": "## Financial Projection Analysis\n\n### Current Scenario\nBased on your current financial data, you have:\n- Monthly savings: ₹25,000\n- Current net worth: ₹21,760\n- Investment portfolio: ₹9,460\n\n### Projected Scenario (₹35,000/month savings)\nWith increased savings of ₹35,000/month, here's your projection:\n\n**Timeline to ₹25 Lakhs:**\n- **Current rate**: 6.8 years\n- **Increased rate**: 4.2 years\n- **Time saved**: 2.6 years\n\n**Key Milestones:**\n- ₹5 Lakhs: 1.2 years (vs 1.8 years)\n- ₹10 Lakhs: 2.1 years (vs 3.2 years)\n- ₹25 Lakhs: 4.2 years (vs 6.8 years)\n\n**Investment Growth Projections:**\n- Conservative (8%): ₹25 Lakhs in 4.8 years\n- Moderate (12%): ₹25 Lakhs in 4.2 years\n- Aggressive (15%): ₹25 Lakhs in 3.7 years\n\n### Financial Impact Analysis\n**Monthly Cash Flow:**\n- Current: ₹25,000 savings\n- Proposed: ₹35,000 savings\n- Additional: ₹10,000/month\n\n**Annual Impact:**\n- Additional savings: ₹1,20,000/year\n- Faster goal achievement: 2.6 years saved\n- Higher compound growth: ₹3,50,000 additional wealth\n\n### Risk Assessment\n**Low Risk Factors:**\n✅ Stable income source\n✅ Good emergency fund\n✅ Diversified investments\n\n**Considerations:**\n⚠️ Ensure lifestyle adjustments are sustainable\n⚠️ Maintain emergency fund adequacy\n⚠️ Monitor investment performance\n\n### Recommendations\n1. **Gradual Increase**: Start with ₹5,000 increase, then ₹10,000\n2. **Automate Savings**: Set up automatic transfers\n3. **Track Progress**: Monitor monthly progress\n4. **Review Quarterly**: Adjust strategy based on performance",
+  
+  "ChartConfigResp": {
+    "chartConfig": {
+      "type": "line",
+      "title": "Net Worth Projection to ₹25 Lakhs",
+      "subtitle": "Current vs Increased Savings Rate",
+      "data": {
+        "labels": ["2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031"],
+        "datasets": [
+          {
+            "label": "Current Savings (₹25K/month)",
+            "data": [21760, 350000, 500000, 650000, 800000, 950000, 1100000, 1250000],
+            "borderColor": "#EF4444",
+            "backgroundColor": "rgba(239, 68, 68, 0.1)",
+            "fill": true
+          },
+          {
+            "label": "Increased Savings (₹35K/month)",
+            "data": [21760, 420000, 650000, 900000, 1200000, 1500000, 1800000, 2100000],
+            "borderColor": "#10B981",
+            "backgroundColor": "rgba(16, 185, 129, 0.1)",
+            "fill": true
+          },
+          {
+            "label": "Target ₹25 Lakhs",
+            "data": [2500000, 2500000, 2500000, 2500000, 2500000, 2500000, 2500000, 2500000],
+            "borderColor": "#8B5CF6",
+            "borderDash": [5, 5],
+            "fill": false
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": "first_5lakhs",
+          "date": "2025-12-31",
+          "label": "₹5 Lakhs Milestone",
+          "description": "Reach first ₹5 lakhs with increased savings",
+          "type": "milestone",
+          "priority": "high",
+          "color": "#10B981"
+        },
+        {
+          "id": "first_10lakhs",
+          "date": "2026-12-31",
+          "label": "₹10 Lakhs Milestone",
+          "description": "Reach ₹10 lakhs milestone",
+          "type": "milestone",
+          "priority": "high",
+          "color": "#3B82F6"
+        },
+        {
+          "id": "target_25lakhs",
+          "date": "2028-06-30",
+          "label": "₹25 Lakhs Target",
+          "description": "Achieve ₹25 lakhs target with increased savings",
+          "type": "goal",
+          "priority": "high",
+          "color": "#8B5CF6"
+        },
+        {
+          "id": "emergency_fund_complete",
+          "date": "2025-03-31",
+          "label": "Emergency Fund Complete",
+          "description": "Build 6-month emergency fund",
+          "type": "milestone",
+          "priority": "medium",
+          "color": "#F59E0B"
+        }
+      ]
+    }
+  },
+  
+  "ToDoResp": [
+    {
+      "priority": "high",
+      "title": "Increase Monthly Savings",
+      "description": "Boost savings from ₹25,000 to ₹35,000/month",
+      "timeline": "Start immediately, full increase by month 3",
+      "impact": "Save 2.6 years to reach ₹25 lakhs"
+    },
+    {
+      "priority": "high",
+      "title": "Emergency Fund Enhancement",
+      "description": "Build 6-month emergency fund",
+      "timeline": "6 months",
+      "impact": "Financial security for aggressive saving"
+    },
+    {
+      "priority": "high",
+      "title": "Investment Optimization",
+      "description": "Increase equity allocation to 70%",
+      "timeline": "3 months",
+      "impact": "Target 12-15% returns vs current 8-10%"
+    },
+    {
+      "priority": "medium",
+      "title": "Debt Elimination",
+      "description": "Pay off all high-interest debt",
+      "timeline": "6 months",
+      "impact": "Save ₹2,000/month in interest payments"
+    },
+    {
+      "priority": "medium",
+      "title": "Tax Optimization",
+      "description": "Maximize tax-saving investments",
+      "timeline": "Before March 2025",
+      "impact": "Save ₹15,000 in taxes"
+    },
+    {
+      "priority": "low",
+      "title": "Portfolio Rebalancing",
+      "description": "Quarterly rebalancing schedule",
+      "timeline": "Every 3 months",
+      "impact": "Maintain optimal risk-return ratio"
+    },
+    {
+      "priority": "low",
+      "title": "Insurance Adequacy",
+      "description": "Review and enhance coverage",
+      "timeline": "6 months",
+      "impact": "Protect family and assets"
+    }
+  ]
+}
+```
+
+### Example 2: Retirement Planning Projection
+
+**Input**: "I want to retire at 60 with ₹2 crore. I'm 35 now. How much should I save?"
+
+**Processing Steps**:
+1. **Fetch MCP Data**: Call all 6 MCP endpoints
+2. **Extract Current Position**: Use MCP data for current savings, investments, age
+3. **Calculate Requirements**: Based on MCP data, calculate required savings
+4. **Generate Response**: Create comprehensive retirement plan
+
+**Response**:
+```json
+{
+  "TextResp": "## Retirement Planning Analysis\n\n### Current Situation\n- Age: 35 years\n- Retirement Age: 60 years\n- Years to Retirement: 25 years\n- Target Corpus: ₹2 crore\n- Current Savings: ₹21,760\n\n### Required Monthly Savings Calculation\n\n**Conservative Approach (8% returns):**\n- Required monthly savings: ₹25,000\n- Total investment needed: ₹75 lakhs\n- Expected corpus: ₹2 crore\n\n**Moderate Approach (12% returns):**\n- Required monthly savings: ₹18,000\n- Total investment needed: ₹54 lakhs\n- Expected corpus: ₹2 crore\n\n**Aggressive Approach (15% returns):**\n- Required monthly savings: ₹15,000\n- Total investment needed: ₹45 lakhs\n- Expected corpus: ₹2 crore\n\n### Current vs Required Savings\n- **Current savings**: ₹25,000/month\n- **Required (moderate)**: ₹18,000/month\n- **Status**: ✅ You're already saving enough!\n\n### Investment Strategy Recommendations\n\n**Asset Allocation:**\n- Equity (70%): ₹17,500/month\n- Debt (20%): ₹5,000/month\n- Gold (10%): ₹2,500/month\n\n**Portfolio Rebalancing:**\n- Frequency: Quarterly\n- Target: Maintain 70:20:10 allocation\n\n### Milestone Tracking\n**Key Milestones:**\n- ₹10 Lakhs: Age 40 (5 years)\n- ₹25 Lakhs: Age 45 (10 years)\n- ₹50 Lakhs: Age 50 (15 years)\n- ₹1 Crore: Age 55 (20 years)\n- ₹2 Crore: Age 60 (25 years)\n\n### Risk Factors\n**Market Risk:**\n- Equity market volatility\n- Interest rate fluctuations\n- Inflation impact\n\n**Personal Risk:**\n- Job security\n- Health issues\n- Family responsibilities\n\n### Contingency Planning\n**Backup Strategies:**\n1. **Extended Working**: Work until 62 if needed\n2. **Part-time Income**: ₹20,000/month post-retirement\n3. **Downsizing**: Reduce target to ₹1.5 crore\n4. **Alternative Investments**: Real estate, business\n\n### Success Probability\n- **High Probability (80%+)**: Current savings with 12% returns\n- **Medium Probability (60-80%)**: Current savings with 8% returns\n- **Low Probability (<60%)**: Reduced savings or lower returns",
+  
+  "ChartConfigResp": {
+    "chartConfig": {
+      "type": "line",
+      "title": "Retirement Corpus Projection",
+      "subtitle": "₹2 Crore Target by Age 60",
+      "data": {
+        "labels": ["35", "40", "45", "50", "55", "60"],
+        "datasets": [
+          {
+            "label": "Conservative (8% returns)",
+            "data": [21760, 1500000, 3500000, 6000000, 10000000, 20000000],
+            "borderColor": "#EF4444",
+            "backgroundColor": "rgba(239, 68, 68, 0.1)",
+            "fill": true
+          },
+          {
+            "label": "Moderate (12% returns)",
+            "data": [21760, 1800000, 4000000, 7000000, 12000000, 20000000],
+            "borderColor": "#10B981",
+            "backgroundColor": "rgba(16, 185, 129, 0.1)",
+            "fill": true
+          },
+          {
+            "label": "Aggressive (15% returns)",
+            "data": [21760, 2000000, 4500000, 8000000, 14000000, 20000000],
+            "borderColor": "#3B82F6",
+            "backgroundColor": "rgba(59, 130, 246, 0.1)",
+            "fill": true
+          },
+          {
+            "label": "Target ₹2 Crore",
+            "data": [20000000, 20000000, 20000000, 20000000, 20000000, 20000000],
+            "borderColor": "#8B5CF6",
+            "borderDash": [5, 5],
+            "fill": false
+          }
+        ]
+      },
+      "events": [
+        {
+          "id": "first_10lakhs",
+          "date": "2029-12-31",
+          "label": "₹10 Lakhs Milestone",
+          "description": "Reach first ₹10 lakhs in retirement corpus",
+          "type": "milestone",
+          "priority": "high",
+          "color": "#10B981"
+        },
+        {
+          "id": "first_25lakhs",
+          "date": "2034-12-31",
+          "label": "₹25 Lakhs Milestone",
+          "description": "Reach ₹25 lakhs milestone",
+          "type": "milestone",
+          "priority": "high",
+          "color": "#3B82F6"
+        },
+        {
+          "id": "first_50lakhs",
+          "date": "2039-12-31",
+          "label": "₹50 Lakhs Milestone",
+          "description": "Reach ₹50 lakhs milestone",
+          "type": "milestone",
+          "priority": "medium",
+          "color": "#F59E0B"
+        },
+        {
+          "id": "first_1crore",
+          "date": "2044-12-31",
+          "label": "₹1 Crore Milestone",
+          "description": "Reach ₹1 crore milestone",
+          "type": "milestone",
+          "priority": "high",
+          "color": "#8B5CF6"
+        },
+        {
+          "id": "retirement_target",
+          "date": "2049-12-31",
+          "label": "₹2 Crore Target",
+          "description": "Achieve ₹2 crore retirement target",
+          "type": "goal",
+          "priority": "high",
+          "color": "#8B5CF6"
+        }
+      ]
+    }
+  },
+  
+  "ToDoResp": [
+    {
+      "priority": "high",
+      "title": "Maintain Current Savings Rate",
+      "description": "Continue ₹25,000/month savings",
+      "timeline": "Ongoing",
+      "impact": "Achieve retirement target comfortably"
+    },
+    {
+      "priority": "high",
+      "title": "Optimize Investment Allocation",
+      "description": "70% equity, 20% debt, 10% gold",
+      "timeline": "3 months",
+      "impact": "Target 12% returns for faster growth"
+    },
+    {
+      "priority": "high",
+      "title": "Emergency Fund Protection",
+      "description": "Maintain 6-month emergency fund",
+      "timeline": "Ongoing",
+      "impact": "Protect retirement savings from emergencies"
+    },
+    {
+      "priority": "medium",
+      "title": "Tax Optimization",
+      "description": "Maximize retirement tax benefits",
+      "timeline": "Before March each year",
+      "impact": "Save ₹15,000 annually in taxes"
+    },
+    {
+      "priority": "medium",
+      "title": "Insurance Adequacy",
+      "description": "Ensure adequate life and health coverage",
+      "timeline": "6 months",
+      "impact": "Protect family and retirement corpus"
+    },
+    {
+      "priority": "low",
+      "title": "Portfolio Rebalancing",
+      "description": "Quarterly rebalancing schedule",
+      "timeline": "Every 3 months",
+      "impact": "Maintain optimal risk-return ratio"
+    },
+    {
+      "priority": "low",
+      "title": "Alternative Investments",
+      "description": "Consider real estate or business",
+      "timeline": "5 years",
+      "impact": "Diversify retirement portfolio"
+    }
+  ]
+}
+```
+
+## Processing Guidelines
+
+### Data Requirements
+1. **Current Financial Data**: Extract from MCP endpoints
+2. **User Goals**: Identify from query context
+3. **Time Horizon**: Calculate based on user age and goals
+4. **Risk Profile**: Assess based on current investments
+
+### Calculation Methods
+1. **Compound Interest**: Use standard compound interest formula
+2. **Inflation Adjustment**: Factor in 6% annual inflation
+3. **Tax Impact**: Consider tax implications on returns
+4. **Risk Premium**: Adjust returns based on risk tolerance
+
+### Chart Configuration Standards
+1. **Multiple Scenarios**: Show conservative, moderate, aggressive
+2. **Event Points**: Include key milestones and goals
+3. **Color Coding**: Use consistent colors for scenarios
+4. **Interactive Elements**: Enable zoom, hover, tooltips
+
+### ToDoResp Structure
+1. **Priority Levels**: High, Medium, Low
+2. **Timeline**: Specific timeframes for completion
+3. **Impact**: Quantified benefits of each goal
+4. **Actions**: Specific steps to accomplish goals
+
+### Error Handling
+1. **Missing Data**: Use reasonable defaults
+2. **Invalid Inputs**: Provide helpful error messages
+3. **Calculation Errors**: Fall back to conservative estimates
+4. **API Failures**: Continue with available data 
